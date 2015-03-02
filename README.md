@@ -10,7 +10,7 @@ Blocking Ads via Hosts File
 The hosts file in a computer acts essentially as a local DNS server. Your computer will do a DNS lookup in the hosts
 file before asking a remote DNS server, and if it gets a match, uses the routing information present in the local
 hosts file. The functionality of the hosts file gives way to an efficient implementation of a system-wide ad-blocking
-method by simply not connecting to ad-servers listed in your hosts file.There are both advantages and disadvantages to
+method by simply not connecting to ad-servers listed in your hosts file. There are both advantages and disadvantages to
 this method of ad-blocking when compared with commonly used ad-blocking browser extensions such as Ad-Block Plus:
 
 Pros
