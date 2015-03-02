@@ -1,0 +1,8 @@
+1. Windows support.
+2. Linux support.
+3. Move logic to JavaFX GUI.
+4. Whitelist.
+5. Custom Add list.
+6. View hosts file.
+7. Be able to choose hosts file sources.
+8. Backup original and current hosts file.

@@ -1,5 +1,28 @@
-HostsGrabber features a GUI and grabs ad-server lists from multiple sources and compiles the lists into one,
-removing duplicate entries while maintaining the original authors' comments. Altering one's hosts file is a nice
-alternative to using ad-blocking extensions as ad-blocking extensions can use a lot of additional system resources
-while the hosts file method uses minimal resources. The program only applies the file automatically to the system
-in OS X and Unix systems only at the moment, and requires a sudo password in order to update the system's hosts file.
+The Hosts File
+---------------------------------------------------------
+The hosts file in a computer acts essentially as a local DNS server. Your computer will do a DNS lookup in the hosts
+file before asking a remote DNS server, and if it gets a match, uses the routing information present in the local
+hosts file. The functionality of the hosts file gives way to an efficient implementation of a system-wide ad-blocking
+method by simply not connecting to ad-servers listed in your hosts file.There are both advantages and disadvantages to
+this method of ad-blocking when compared with commonly used ad-blocking browser extensions such as Ad-Block Plus:
+
++ CPU/Memory efficient. Browser extensions regularly uses large amounts of resources where the hosts method requires negligible overhead.
++ Speed. Your browser is going to ping your computer for DNS information for ad-servers vs pinging a remote server. Along with the using less system resources, your overall browsing experience should be faster than if using an ad-block extension.
++ Battery life. Less usage of system resources should lead to more battery life. To provide an anecdote, I get approximately one more hour of battery life from my laptop from not using a browser extension. Results will vary, of course.
+
+- Less thorough. While the hosts file can only block out entire domains, browser extensions can use wildcard searches as well as block out specific elements of a website and will overall be more effective at eliminating ads from your view.
+- Sometimes breaks functionality. When you block an entire domain, sometimes certain functions don't work when other websites depend on that domain. This is rectified by using a whitelist.
+
+HostsGrabber pulls and compiles several hosts files from the Internet as well as lists used by Ad-Block Plus to supplement those hosts files.
+Currently, the program only supports the Mac platform.
+
+TODO
+----------------------------------------------------------
+1. Windows support.
+2. Linux support.
+3. Move logic to JavaFX GUI.
+4. Whitelist.
+5. Custom Add list.
+6. View hosts file.
+7. Be able to choose hosts file sources.
+8. Backup original and current hosts file
