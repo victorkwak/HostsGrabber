@@ -7,7 +7,6 @@
 <?import javafx.scene.Cursor?>
 <?import javafx.scene.layout.*?>
 
-
 <AnchorPane prefHeight="400.0" prefWidth="380.0" xmlns="http://javafx.com/javafx/8" xmlns:fx="http://javafx.com/fxml/1" fx:controller="HostsGrabberFX">
    <children>
       <MenuBar prefHeight="29.0" prefWidth="380.0" AnchorPane.leftAnchor="0.0" AnchorPane.rightAnchor="0.0">
@@ -33,36 +32,32 @@
         <tabs>
           <Tab text="Main">
                <content>
-                  <AnchorPane>
+                  <VBox prefHeight="345.0" prefWidth="380.0" AnchorPane.bottomAnchor="0.0" AnchorPane.leftAnchor="0.0" AnchorPane.rightAnchor="0.0" AnchorPane.topAnchor="0.0">
                      <children>
-                        <VBox prefHeight="345.0" prefWidth="380.0" AnchorPane.bottomAnchor="0.0" AnchorPane.leftAnchor="0.0" AnchorPane.rightAnchor="0.0" AnchorPane.topAnchor="0.0">
+                        <AnchorPane prefHeight="48.0" prefWidth="380.0">
                            <children>
-                              <AnchorPane prefHeight="48.0" prefWidth="380.0">
-                                 <children>
-                                    <Label layoutY="22.0" text="Password:">
-                                       <padding>
-                                          <Insets left="30.0" />
-                                       </padding>
-                                    </Label>
-                                    <PasswordField layoutX="105.0" layoutY="19.0" prefHeight="26.0" prefWidth="240.0" AnchorPane.leftAnchor="105.0" AnchorPane.rightAnchor="35.0" />
-                                 </children>
-                              </AnchorPane>
-                              <AnchorPane prefHeight="46.0" prefWidth="380.0">
-                                 <children>
-                                    <Label layoutX="54.0" layoutY="14.0" text="Press &quot;Start&quot; to begin." />
-                                    <Button layoutX="202.0" layoutY="9.0" mnemonicParsing="false" text="Start" />
-                                    <Button layoutX="260.0" layoutY="9.0" mnemonicParsing="false" text="Cancel" />
-                                 </children>
-                              </AnchorPane>
-                              <AnchorPane prefHeight="370.0" prefWidth="380.0">
-                                 <children>
-                                    <TextArea AnchorPane.bottomAnchor="30.0" AnchorPane.leftAnchor="30.0" AnchorPane.rightAnchor="30.0" AnchorPane.topAnchor="10.0" />
-                                 </children>
-                              </AnchorPane>
+                              <Label layoutY="22.0" text="Password:">
+                                 <padding>
+                                    <Insets left="30.0" />
+                                 </padding>
+                              </Label>
+                              <PasswordField layoutX="105.0" layoutY="19.0" prefHeight="26.0" prefWidth="240.0" AnchorPane.leftAnchor="105.0" AnchorPane.rightAnchor="35.0" />
                            </children>
-                        </VBox>
+                        </AnchorPane>
+                        <AnchorPane prefHeight="46.0" prefWidth="380.0">
+                           <children>
+                              <Label layoutX="54.0" layoutY="14.0" text="Press &quot;Start&quot; to begin." />
+                              <Button layoutX="202.0" layoutY="9.0" mnemonicParsing="false" text="Start" />
+                              <Button layoutX="260.0" layoutY="9.0" mnemonicParsing="false" text="Cancel" />
+                           </children>
+                        </AnchorPane>
+                        <AnchorPane prefHeight="370.0" prefWidth="380.0">
+                           <children>
+                              <TextArea AnchorPane.bottomAnchor="30.0" AnchorPane.leftAnchor="30.0" AnchorPane.rightAnchor="30.0" AnchorPane.topAnchor="10.0" />
+                           </children>
+                        </AnchorPane>
                      </children>
-                  </AnchorPane>
+                  </VBox>
                </content>
             </Tab>
           <Tab text="Untitled Tab 2" />
