@@ -17,7 +17,7 @@ Pros
 ----
 + CPU/Memory efficient. Browser extensions regularly uses large amounts of resources where the hosts method requires negligible overhead.
 + Speed. Your browser is going to ping your computer for DNS information for ad-servers vs pinging a remote server. Along with the using less system resources, your overall browsing experience should be faster than if using an ad-block extension.
-+ Battery life. Less usage of system resources should lead to more battery life. To provide an anecdote, I get approximately one more hour of battery life from my laptop from not using a browser extension. Results will vary, of course.
++ Battery life. Less usage of system resources should lead to more battery life. To provide an anecdote, I get approximately one more hour of battery life from my laptop from not using an ad-blocking extension. Results will vary, of course.
 
 Cons
 ----
