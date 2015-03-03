@@ -302,26 +302,35 @@ public class HostsGrabberSwing implements ActionListener, PropertyChangeListener
 
             try {
                 //If OS X machine
-                if (os.contains("Mac")) {
-                    Path hostsPathMac = Paths.get(absolutePath + "/hosts");
-                    Path privateEtc = Paths.get("/private/etc");
+                if (os.contains("Mac") || os.contains("Linux")) {
+                    Path hostsPath = Paths.get(absolutePath + "/hosts");
+                    Path privateEtc;
+                    if (os.contains("Mac")) {
+                        privateEtc = Paths.get("/private/etc");
+                    } else {
+                        privateEtc = Paths.get("/etc");
+                    }
                     String flush = "";
                     // Different ways for flushing DNS cache for different versions of OS X.
-                    if (version.contains("10.10")) {
-                        flush = " && discoveryutil mdnsflushcache";
-                    } else if (version.contains("10.9") || version.contains("10.8") || version.contains("10.7")) {
-                        flush = " && killall -HUP mDNSResponder";
-                    } else if (version.contains("10.6")) {
-                        flush = " && dscacheutil -flushcache";
+                    if (os.contains("Mac")) {
+                        if (version.contains("10.10")) {
+                            flush = " && discoveryutil mdnsflushcache";
+                        } else if (version.contains("10.9") || version.contains("10.8") || version.contains("10.7")) {
+                            flush = " && killall -HUP mDNSResponder";
+                        } else if (version.contains("10.6")) {
+                            flush = " && dscacheutil -flushcache";
+                        }
                     }
-                    if (Files.isReadable(hostsPathMac)) {
+                    if (Files.isReadable(hostsPath)) {
                         System.out.println("Copying hosts file to the System...");
                         currentTask.append("Copying hosts file to the System...\n");
-                        System.out.println("Flushing DNS cache...");
-                        currentTask.append("Flushing DNS cache...\n");
+                        if (os.contains("Mac")) {
+                            System.out.println("Flushing DNS cache...");
+                            currentTask.append("Flushing DNS cache...\n");
+                        }
                         String password = new String(passwordField.getPassword());
                         String[] commands = {"/bin/bash", "-c",
-                                "echo " + password + " | sudo -S cp " + hostsPathMac + " " + privateEtc + flush};
+                                "echo " + password + " | sudo -S cp " + hostsPath + " " + privateEtc + flush};
                         Runtime.getRuntime().exec(commands);
                     }
                 }
@@ -400,20 +409,22 @@ public class HostsGrabberSwing implements ActionListener, PropertyChangeListener
 
     private boolean verifyPassword(String password) {
         boolean working = false;
-        String[] commands = {"/bin/bash", "-c",
-                "echo " + password + " | sudo -S echo working"};
-        try {
-            Process vPass = Runtime.getRuntime().exec(commands);
-            BufferedReader bufferedReader = new BufferedReader(new InputStreamReader(vPass.getInputStream()));
-            String currentLine;
-            while ((currentLine = bufferedReader.readLine()) != null) {
-                if (currentLine.equals("working")) {
-                    working = true;
+        if (os.contains("Mac") || os.contains("Linux")) {
+            String[] commands = {"/bin/bash", "-c",
+                    "echo " + password + " | sudo -S echo working"};
+            try {
+                Process vPass = Runtime.getRuntime().exec(commands);
+                BufferedReader bufferedReader = new BufferedReader(new InputStreamReader(vPass.getInputStream()));
+                String currentLine;
+                while ((currentLine = bufferedReader.readLine()) != null) {
+                    if (currentLine.equals("working")) {
+                        working = true;
+                    }
                 }
+                bufferedReader.close();
+            } catch (IOException e) {
+                e.printStackTrace();
             }
-            bufferedReader.close();
-        } catch (IOException e) {
-            e.printStackTrace();
         }
         return working;
     }
