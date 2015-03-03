@@ -3,7 +3,7 @@ HostsGrabber
 **HostsGrabber** pulls and compiles several hosts files from the Internet as well as lists used by Ad-Block Plus to
 supplement those hosts files. The program automates the process of locating up-to-date and reputable hosts files for
 use with ad-blocking, as well as implementing the files into your system.
-Currently, the program only supports the Mac platform.
+Currently, the program only supports the Mac and Linux platforms. Windows support underway!
 
 Blocking Ads via Hosts File
 ===========================
@@ -27,10 +27,9 @@ Cons
 TODO
 ====
 1. Windows support.
-2. Linux support.
-3. Move logic to JavaFX GUI.
-4. Whitelist.
-5. Custom Add list.
-6. View hosts file.
-7. Be able to choose hosts file sources.
-8. Backup original and current hosts file
+2. Move logic to JavaFX GUI.
+3. Whitelist.
+4. Custom Add list.
+5. View hosts file.
+6. Be able to choose hosts file sources.
+7. Backup original and current hosts file
