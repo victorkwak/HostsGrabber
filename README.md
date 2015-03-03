@@ -13,13 +13,13 @@ hosts file. The functionality of the hosts file gives way to an efficient implem
 method by simply not connecting to ad-servers listed in your hosts file. There are both advantages and disadvantages to
 this method of ad-blocking when compared with commonly used ad-blocking browser extensions such as Ad-Block Plus:
 
-#Pros
+###Pros
 
 + CPU/Memory efficient. Browser extensions regularly uses large amounts of resources where the hosts method requires negligible overhead.
 + Speed. Your browser is going to ping your computer for DNS information for ad-servers vs pinging a remote server. Along with the using less system resources, your overall browsing experience should be faster than if using an ad-block extension.
 + Battery life. Less usage of system resources should lead to more battery life. To provide an anecdote, I get approximately one more hour of battery life from my laptop from not using an ad-blocking extension. Results will vary, of course.
 
-#Cons
+### Cons
 
 - Less thorough. While the hosts file can only block out entire domains, browser extensions can use wildcard searches as well as block out specific elements of a website and will overall be more effective at eliminating ads from your view.
 - Sometimes breaks functionality. When you block an entire domain, sometimes certain functions don't work when other websites depend on that domain. This is rectified by using a whitelist.
