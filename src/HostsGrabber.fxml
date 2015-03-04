@@ -5,191 +5,138 @@
 <?import javafx.scene.layout.*?>
 <AnchorPane fx:id="frame" prefHeight="400.0" prefWidth="380.0" xmlns="http://javafx.com/javafx/8"
             xmlns:fx="http://javafx.com/fxml/1" fx:controller="HostsGrabber">
-    <children>
-        <MenuBar prefHeight="29.0" prefWidth="380.0" AnchorPane.leftAnchor="0.0" AnchorPane.rightAnchor="0.0">
-            <menus>
-                <Menu mnemonicParsing="false" text="File">
-                    <items>
-                        <MenuItem mnemonicParsing="false" onAction="#closeProgram" text="Close"/>
-                    </items>
-                </Menu>
-                <Menu mnemonicParsing="false" text="Help">
-                    <items>
-                        <MenuItem mnemonicParsing="false" onAction="#showAbout" text="About"/>
-                    </items>
-                </Menu>
-            </menus>
-        </MenuBar>
-        <TabPane layoutY="27.0" prefHeight="373.0" prefWidth="380.0" tabClosingPolicy="UNAVAILABLE"
-                 AnchorPane.bottomAnchor="0.0" AnchorPane.leftAnchor="0.0" AnchorPane.rightAnchor="0.0"
-                 AnchorPane.topAnchor="27.0">
-            <tabs>
-                <Tab text="Main">
-                    <content>
-                        <VBox prefHeight="345.0" prefWidth="380.0" AnchorPane.bottomAnchor="0.0"
-                              AnchorPane.leftAnchor="0.0" AnchorPane.rightAnchor="0.0" AnchorPane.topAnchor="0.0">
-                            <children>
-                                <AnchorPane>
-                                    <children>
-                                        <Label layoutY="22.0" text="Password:">
-                                            <padding>
-                                                <Insets left="30.0"/>
-                                            </padding>
-                                        </Label>
-                                        <PasswordField fx:id="passwordField" layoutX="105.0" layoutY="19.0"
-                                                       prefHeight="26.0"
-                                                       prefWidth="240.0" AnchorPane.leftAnchor="105.0"
-                                                       AnchorPane.rightAnchor="35.0"/>
-                                    </children>
-                                </AnchorPane>
-                                <AnchorPane>
-                                    <children>
-                                        <Label layoutX="54.0" layoutY="14.0" text="Press &quot;Start&quot; to begin."/>
-                                        <Button layoutX="202.0" layoutY="9.0"
-                                                mnemonicParsing="false" onAction="#getHosts" text="Start"/>
-                                        <Button layoutX="260.0" layoutY="9.0"
-                                                mnemonicParsing="false" onAction="#cancelTask" text="Cancel"/>
-                                    </children>
-                                </AnchorPane>
-                                <AnchorPane prefHeight="370.0" prefWidth="380.0">
-                                    <children>
-                                        <TextArea fx:id="processLog" AnchorPane.bottomAnchor="30.0"
-                                                  AnchorPane.leftAnchor="30.0" AnchorPane.rightAnchor="30.0"
-                                                  AnchorPane.topAnchor="10.0"/>
-                                    </children>
-                                </AnchorPane>
-                            </children>
-                        </VBox>
-                    </content>
-                </Tab>
-                <Tab text="Whitelist">
-                    <content>
-                        <AnchorPane prefHeight="200.0" prefWidth="200.0">
-                            <children>
-                                <VBox layoutY="-1.0" prefHeight="341.0" prefWidth="380.0" AnchorPane.bottomAnchor="0.0"
-                                      AnchorPane.leftAnchor="0.0" AnchorPane.rightAnchor="0.0"
-                                      AnchorPane.topAnchor="-1.0">
-                                    <children>
-                                        <AnchorPane prefHeight="98.0" prefWidth="380.0">
-                                            <children>
-                                                <Label text="URL: ">
-                                                    <padding>
-                                                        <Insets left="30.0" top="25.0"/>
-                                                    </padding>
-                                                </Label>
-                                                <TextField fx:id="whitelistURLField" layoutX="71.0" layoutY="21.0"
-                                                           prefHeight="26.0" prefWidth="148.0"
-                                                           AnchorPane.leftAnchor="71.0" AnchorPane.rightAnchor="161.0"/>
-                                                <Button layoutX="232.0" layoutY="21.0"
-                                                        mnemonicParsing="false" onAction="#addToWhitelist" text="Add"
-                                                        AnchorPane.rightAnchor="105.0"/>
-                                                <Button layoutX="308.0" layoutY="21.0"
-                                                        mnemonicParsing="false" onAction="#removeFromWhitelist" text="Remove"
-                                                        AnchorPane.rightAnchor="30.0"/>
-                                            </children>
-                                        </AnchorPane>
-                                        <AnchorPane prefHeight="305.0" prefWidth="380.0">
-                                            <children>
-                                                <ListView fx:id="whitelist" layoutX="90.0" layoutY="37.0"
-                                                          prefHeight="200.0" prefWidth="200.0"
-                                                          AnchorPane.bottomAnchor="30.0" AnchorPane.leftAnchor="30.0"
-                                                          AnchorPane.rightAnchor="30.0" AnchorPane.topAnchor="0.0"/>
-                                            </children>
-                                        </AnchorPane>
-                                    </children>
-                                </VBox>
-                            </children>
-                        </AnchorPane>
-                    </content>
-                </Tab>
-                <Tab text="Custom">
-                    <content>
-                        <AnchorPane prefHeight="200.0" prefWidth="200.0">
-                            <children>
-                                <VBox layoutY="-1.0" prefHeight="341.0" prefWidth="380.0" AnchorPane.bottomAnchor="0.0"
-                                      AnchorPane.leftAnchor="0.0" AnchorPane.rightAnchor="0.0"
-                                      AnchorPane.topAnchor="-1.0">
-                                    <children>
-                                        <AnchorPane prefHeight="98.0" prefWidth="380.0">
-                                            <children>
-                                                <Label text="URL: ">
-                                                    <padding>
-                                                        <Insets left="30.0" top="25.0"/>
-                                                    </padding>
-                                                </Label>
-                                                <TextField fx:id="customURLField" layoutX="71.0" layoutY="21.0"
-                                                           prefHeight="26.0" prefWidth="148.0"
-                                                           AnchorPane.leftAnchor="71.0" AnchorPane.rightAnchor="161.0"/>
-                                                <Button layoutX="232.0" layoutY="21.0"
-                                                        mnemonicParsing="false" text="Add"
-                                                        AnchorPane.rightAnchor="105.0"/>
-                                                <Button layoutX="308.0" layoutY="21.0"
-                                                        mnemonicParsing="false" text="Remove"
-                                                        AnchorPane.rightAnchor="30.0"/>
-                                            </children>
-                                        </AnchorPane>
-                                        <AnchorPane prefHeight="305.0" prefWidth="380.0">
-                                            <children>
-                                                <ListView fx:id="customList" layoutX="90.0" layoutY="37.0"
-                                                          prefHeight="200.0" prefWidth="200.0"
-                                                          AnchorPane.bottomAnchor="30.0" AnchorPane.leftAnchor="30.0"
-                                                          AnchorPane.rightAnchor="30.0" AnchorPane.topAnchor="0.0"/>
-                                            </children>
-                                        </AnchorPane>
-                                    </children>
-                                </VBox>
-                            </children>
-                        </AnchorPane>
-                    </content>
-                </Tab>
-                <Tab text="Hosts">
-                    <content>
-                        <AnchorPane minHeight="0.0" minWidth="0.0" prefHeight="180.0" prefWidth="200.0">
-                            <children>
-                                <TextArea fx:id="hostsFile" prefHeight="340.0" prefWidth="380.0"
-                                          AnchorPane.bottomAnchor="0.0" AnchorPane.leftAnchor="0.0"
-                                          AnchorPane.rightAnchor="0.0" AnchorPane.topAnchor="0.0"/>
-                            </children>
-                        </AnchorPane>
-                    </content>
-                </Tab>
-                <Tab text="Options">
-                    <content>
-                        <AnchorPane minHeight="0.0" minWidth="0.0" prefHeight="180.0" prefWidth="200.0">
-                            <children>
-                                <VBox layoutX="30.0" layoutY="25.0" prefHeight="50.0" prefWidth="331.0" spacing="5.0"
-                                      AnchorPane.leftAnchor="30.0" AnchorPane.rightAnchor="30.0">
-                                    <children>
-                                        <Label text="Routing Address: "/>
-                                        <HBox prefHeight="28.0" prefWidth="331.0" spacing="10.0">
-                                            <children>
-                                                <RadioButton fx:id="radio0" mnemonicParsing="false" text="0"/>
-                                                <RadioButton fx:id="radio127" mnemonicParsing="false" text="127.0.0.1"/>
-                                                <RadioButton fx:id="radio00" mnemonicParsing="false" text="0.0.0.0"/>
-                                            </children>
-                                        </HBox>
-                                    </children>
-                                </VBox>
-                                <VBox layoutX="30.0" layoutY="92.0" prefHeight="237.0" prefWidth="320.0" spacing="5.0"
-                                      AnchorPane.bottomAnchor="30.0" AnchorPane.leftAnchor="30.0"
-                                      AnchorPane.rightAnchor="30.0">
-                                    <children>
-                                        <Label text="Sources:"/>
-                                        <CheckBox mnemonicParsing="false" text="CheckBox"/>
-                                        <CheckBox mnemonicParsing="false" text="CheckBox"/>
-                                        <CheckBox mnemonicParsing="false" text="CheckBox"/>
-                                        <CheckBox mnemonicParsing="false" text="CheckBox"/>
-                                        <CheckBox mnemonicParsing="false" text="CheckBox"/>
-                                        <CheckBox mnemonicParsing="false" text="CheckBox"/>
-                                        <CheckBox mnemonicParsing="false" text="CheckBox"/>
-                                        <CheckBox mnemonicParsing="false" text="CheckBox"/>
-                                    </children>
-                                </VBox>
-                            </children>
-                        </AnchorPane>
-                    </content>
-                </Tab>
-            </tabs>
-        </TabPane>
-    </children>
+    <MenuBar prefHeight="29.0" prefWidth="380.0" AnchorPane.leftAnchor="0.0" AnchorPane.rightAnchor="0.0">
+        <Menu mnemonicParsing="false" text="File">
+            <MenuItem mnemonicParsing="false" onAction="#closeProgram" text="Close"/>
+        </Menu>
+        <Menu mnemonicParsing="false" text="Help">
+            <MenuItem mnemonicParsing="false" onAction="#showAbout" text="About"/>
+        </Menu>
+    </MenuBar>
+    <TabPane layoutY="27.0" prefHeight="373.0" prefWidth="380.0" tabClosingPolicy="UNAVAILABLE"
+             AnchorPane.bottomAnchor="0.0" AnchorPane.leftAnchor="0.0" AnchorPane.rightAnchor="0.0"
+             AnchorPane.topAnchor="27.0">
+        <Tab text="Main">
+            <VBox prefHeight="345.0" prefWidth="380.0" AnchorPane.bottomAnchor="0.0"
+                  AnchorPane.leftAnchor="0.0" AnchorPane.rightAnchor="0.0" AnchorPane.topAnchor="0.0">
+                <AnchorPane>
+                    <Label layoutY="22.0" text="Password:">
+                        <padding>
+                            <Insets left="30.0"/>
+                        </padding>
+                    </Label>
+                    <PasswordField fx:id="passwordField" layoutX="105.0" layoutY="19.0"
+                                   prefHeight="26.0"
+                                   prefWidth="240.0" AnchorPane.leftAnchor="105.0"
+                                   AnchorPane.rightAnchor="35.0"/>
+                </AnchorPane>
+                <AnchorPane>
+                    <Label layoutX="54.0" layoutY="14.0" text="Press &quot;Start&quot; to begin."/>
+                    <Button layoutX="202.0" layoutY="9.0"
+                            mnemonicParsing="false" onAction="#getHosts" text="Start"/>
+                    <Button layoutX="260.0" layoutY="9.0"
+                            mnemonicParsing="false" onAction="#cancelTask" text="Cancel"/>
+                </AnchorPane>
+                <AnchorPane prefHeight="370.0" prefWidth="380.0">
+                    <TextArea fx:id="processLog" AnchorPane.bottomAnchor="30.0"
+                              AnchorPane.leftAnchor="30.0" AnchorPane.rightAnchor="30.0"
+                              AnchorPane.topAnchor="10.0"/>
+                </AnchorPane>
+            </VBox>
+        </Tab>
+        <Tab text="Whitelist">
+            <AnchorPane prefHeight="200.0" prefWidth="200.0">
+                <VBox layoutY="-1.0" prefHeight="341.0" prefWidth="380.0" AnchorPane.bottomAnchor="0.0"
+                      AnchorPane.leftAnchor="0.0" AnchorPane.rightAnchor="0.0"
+                      AnchorPane.topAnchor="-1.0">
+                    <AnchorPane prefHeight="98.0" prefWidth="380.0">
+                        <Label text="URL: ">
+                            <padding>
+                                <Insets left="30.0" top="25.0"/>
+                            </padding>
+                        </Label>
+                        <TextField fx:id="whitelistURLField" layoutX="71.0" layoutY="21.0"
+                                   prefHeight="26.0" prefWidth="148.0"
+                                   AnchorPane.leftAnchor="71.0" AnchorPane.rightAnchor="161.0"/>
+                        <Button layoutX="232.0" layoutY="21.0"
+                                mnemonicParsing="false" onAction="#addToWhitelist" text="Add"
+                                AnchorPane.rightAnchor="105.0"/>
+                        <Button layoutX="308.0" layoutY="21.0"
+                                mnemonicParsing="false" onAction="#removeFromWhitelist"
+                                text="Remove"
+                                AnchorPane.rightAnchor="30.0"/>
+                    </AnchorPane>
+                    <AnchorPane prefHeight="305.0" prefWidth="380.0">
+                        <ListView fx:id="whitelist" layoutX="90.0" layoutY="37.0"
+                                  prefHeight="200.0" prefWidth="200.0"
+                                  AnchorPane.bottomAnchor="30.0" AnchorPane.leftAnchor="30.0"
+                                  AnchorPane.rightAnchor="30.0" AnchorPane.topAnchor="0.0"/>
+                    </AnchorPane>
+                </VBox>
+            </AnchorPane>
+        </Tab>
+        <Tab text="Custom">
+            <AnchorPane prefHeight="200.0" prefWidth="200.0">
+                <VBox layoutY="-1.0" prefHeight="341.0" prefWidth="380.0" AnchorPane.bottomAnchor="0.0"
+                      AnchorPane.leftAnchor="0.0" AnchorPane.rightAnchor="0.0"
+                      AnchorPane.topAnchor="-1.0">
+                    <AnchorPane prefHeight="98.0" prefWidth="380.0">
+                        <Label text="URL: ">
+                            <padding>
+                                <Insets left="30.0" top="25.0"/>
+                            </padding>
+                        </Label>
+                        <TextField fx:id="customURLField" layoutX="71.0" layoutY="21.0"
+                                   prefHeight="26.0" prefWidth="148.0"
+                                   AnchorPane.leftAnchor="71.0" AnchorPane.rightAnchor="161.0"/>
+                        <Button layoutX="232.0" layoutY="21.0"
+                                mnemonicParsing="false" text="Add"
+                                AnchorPane.rightAnchor="105.0"/>
+                        <Button layoutX="308.0" layoutY="21.0"
+                                mnemonicParsing="false" text="Remove"
+                                AnchorPane.rightAnchor="30.0"/>
+                    </AnchorPane>
+                    <AnchorPane prefHeight="305.0" prefWidth="380.0">
+                        <ListView fx:id="customList" layoutX="90.0" layoutY="37.0"
+                                  prefHeight="200.0" prefWidth="200.0"
+                                  AnchorPane.bottomAnchor="30.0" AnchorPane.leftAnchor="30.0"
+                                  AnchorPane.rightAnchor="30.0" AnchorPane.topAnchor="0.0"/>
+                    </AnchorPane>
+                </VBox>
+            </AnchorPane>
+        </Tab>
+        <Tab text="Hosts">
+            <AnchorPane minHeight="0.0" minWidth="0.0" prefHeight="180.0" prefWidth="200.0">
+                <TextArea fx:id="hostsFile" prefHeight="340.0" prefWidth="380.0"
+                          AnchorPane.bottomAnchor="0.0" AnchorPane.leftAnchor="0.0"
+                          AnchorPane.rightAnchor="0.0" AnchorPane.topAnchor="0.0"/>
+            </AnchorPane>
+        </Tab>
+        <Tab text="Options">
+            <AnchorPane minHeight="0.0" minWidth="0.0" prefHeight="180.0" prefWidth="200.0">
+                <VBox layoutX="30.0" layoutY="25.0" prefHeight="50.0" prefWidth="331.0" spacing="5.0"
+                      AnchorPane.leftAnchor="30.0" AnchorPane.rightAnchor="30.0">
+                    <Label text="Routing Address: "/>
+                    <HBox prefHeight="28.0" prefWidth="331.0" spacing="10.0">
+                        <RadioButton fx:id="radio0" mnemonicParsing="false" text="0"/>
+                        <RadioButton fx:id="radio127" mnemonicParsing="false" text="127.0.0.1"/>
+                        <RadioButton fx:id="radio00" mnemonicParsing="false" text="0.0.0.0"/>
+                    </HBox>
+                </VBox>
+                <VBox layoutX="30.0" layoutY="92.0" prefHeight="237.0" prefWidth="320.0" spacing="5.0"
+                      AnchorPane.bottomAnchor="30.0" AnchorPane.leftAnchor="30.0"
+                      AnchorPane.rightAnchor="30.0">
+                    <Label text="Sources:"/>
+                    <CheckBox mnemonicParsing="false" text="CheckBox"/>
+                    <CheckBox mnemonicParsing="false" text="CheckBox"/>
+                    <CheckBox mnemonicParsing="false" text="CheckBox"/>
+                    <CheckBox mnemonicParsing="false" text="CheckBox"/>
+                    <CheckBox mnemonicParsing="false" text="CheckBox"/>
+                    <CheckBox mnemonicParsing="false" text="CheckBox"/>
+                    <CheckBox mnemonicParsing="false" text="CheckBox"/>
+                    <CheckBox mnemonicParsing="false" text="CheckBox"/>
+                </VBox>
+            </AnchorPane>
+        </Tab>
+    </TabPane>
 </AnchorPane>
