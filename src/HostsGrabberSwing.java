@@ -325,16 +325,22 @@ public class HostsGrabberSwing implements ActionListener, PropertyChangeListener
                         Runtime.getRuntime().exec(commands);
                     }
                 }
+                // Miguel Tolosa start
+                // implement hostfile backup
                 //If Windows machine
-//                else if (System.getProperty("os.name").contains("Windows")) {
-//                    Path hostsPathWindows = Paths.get(absolutePath + "\\hosts");
-//                    Path windowsHosts = Paths.get("C:\\Windows\\System32\\Drivers\\etc\\hosts");
-//                    if (Files.isReadable(hostsPathWindows)) {
-//                        Runtime.getRuntime().exec("cmd.exe /c Copy /y \"" + hostsPathWindows + "\" \"" + windowsHosts + "\"");
-//                        System.out.println("Copying hosts file to " + windowsHosts);
-//                        currentTask.append("Copying hosts file to " + windowsHosts + "\n");
-//                    }
-//                }
+                else if (System.getProperty("os.name").contains("Windows")) {
+                    System.out.println("Started hosts file function");
+
+                    Path hostsPathWindows = Paths.get(absolutePath + "\\hosts");
+                    Path windowsHosts = Paths.get("C:\\Windows\\System32\\Drivers\\etc\\hosts");
+                    if (Files.isReadable(hostsPathWindows)) {
+                        System.out.println("Entered hosts file loop");
+
+                        Runtime.getRuntime().exec("cmd.exe /c Copy /y \"" + hostsPathWindows + "\" \"" + windowsHosts + "\"");
+                        System.out.println("Copying hosts file to " + windowsHosts);
+                        currentTask.append("Copying hosts file to " + windowsHosts + "\n");
+                    }
+                }
             } catch (IOException e) {
                 e.printStackTrace();
             }
@@ -400,8 +406,12 @@ public class HostsGrabberSwing implements ActionListener, PropertyChangeListener
 
     private boolean verifyPassword(String password) {
         boolean working = false;
-        String[] commands = {"/bin/bash", "-c",
+ //       String[] commands = {"/bin/bash", "-c",
+ //               "echo " + password + " | sudo -S echo working"};
+
+        String[] commands = {"cmd.exe", "/c",
                 "echo " + password + " | sudo -S echo working"};
+
         try {
             Process vPass = Runtime.getRuntime().exec(commands);
             BufferedReader bufferedReader = new BufferedReader(new InputStreamReader(vPass.getInputStream()));
