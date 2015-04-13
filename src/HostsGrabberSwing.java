@@ -302,48 +302,45 @@ public class HostsGrabberSwing implements ActionListener, PropertyChangeListener
 
             try {
                 //If OS X machine
-                if (os.contains("Mac") || os.contains("Linux")) {
-                    Path hostsPath = Paths.get(absolutePath + "/hosts");
-                    Path privateEtc;
-                    if (os.contains("Mac")) {
-                        privateEtc = Paths.get("/private/etc");
-                    } else {
-                        privateEtc = Paths.get("/etc");
-                    }
+                if (os.contains("Mac")) {
+                    Path hostsPathMac = Paths.get(absolutePath + "/hosts");
+                    Path privateEtc = Paths.get("/private/etc");
                     String flush = "";
                     // Different ways for flushing DNS cache for different versions of OS X.
-                    if (os.contains("Mac")) {
-                        if (version.contains("10.10")) {
-                            flush = " && discoveryutil mdnsflushcache";
-                        } else if (version.contains("10.9") || version.contains("10.8") || version.contains("10.7")) {
-                            flush = " && killall -HUP mDNSResponder";
-                        } else if (version.contains("10.6")) {
-                            flush = " && dscacheutil -flushcache";
-                        }
+                    if (version.contains("10.10")) {
+                        flush = " && discoveryutil mdnsflushcache";
+                    } else if (version.contains("10.9") || version.contains("10.8") || version.contains("10.7")) {
+                        flush = " && killall -HUP mDNSResponder";
+                    } else if (version.contains("10.6")) {
+                        flush = " && dscacheutil -flushcache";
                     }
-                    if (Files.isReadable(hostsPath)) {
+                    if (Files.isReadable(hostsPathMac)) {
                         System.out.println("Copying hosts file to the System...");
                         currentTask.append("Copying hosts file to the System...\n");
-                        if (os.contains("Mac")) {
-                            System.out.println("Flushing DNS cache...");
-                            currentTask.append("Flushing DNS cache...\n");
-                        }
+                        System.out.println("Flushing DNS cache...");
+                        currentTask.append("Flushing DNS cache...\n");
                         String password = new String(passwordField.getPassword());
                         String[] commands = {"/bin/bash", "-c",
-                                "echo " + password + " | sudo -S cp " + hostsPath + " " + privateEtc + flush};
+                                "echo " + password + " | sudo -S cp " + hostsPathMac + " " + privateEtc + flush};
                         Runtime.getRuntime().exec(commands);
                     }
                 }
+                // Miguel Tolosa start
+                // implement hostfile backup
                 //If Windows machine
-//                else if (System.getProperty("os.name").contains("Windows")) {
-//                    Path hostsPathWindows = Paths.get(absolutePath + "\\hosts");
-//                    Path windowsHosts = Paths.get("C:\\Windows\\System32\\Drivers\\etc\\hosts");
-//                    if (Files.isReadable(hostsPathWindows)) {
-//                        Runtime.getRuntime().exec("cmd.exe /c Copy /y \"" + hostsPathWindows + "\" \"" + windowsHosts + "\"");
-//                        System.out.println("Copying hosts file to " + windowsHosts);
-//                        currentTask.append("Copying hosts file to " + windowsHosts + "\n");
-//                    }
-//                }
+                else if (System.getProperty("os.name").contains("Windows")) {
+                    System.out.println("Started hosts file function");
+
+                    Path hostsPathWindows = Paths.get(absolutePath + "\\hosts");
+                    Path windowsHosts = Paths.get("C:\\Windows\\System32\\Drivers\\etc\\hosts");
+                    if (Files.isReadable(hostsPathWindows)) {
+                        System.out.println("Entered hosts file loop");
+
+                        Runtime.getRuntime().exec("cmd.exe /c Copy /y \"" + hostsPathWindows + "\" \"" + windowsHosts + "\"");
+                        System.out.println("Copying hosts file to " + windowsHosts);
+                        currentTask.append("Copying hosts file to " + windowsHosts + "\n");
+                    }
+                }
             } catch (IOException e) {
                 e.printStackTrace();
             }
@@ -409,22 +406,24 @@ public class HostsGrabberSwing implements ActionListener, PropertyChangeListener
 
     private boolean verifyPassword(String password) {
         boolean working = false;
-        if (os.contains("Mac") || os.contains("Linux")) {
-            String[] commands = {"/bin/bash", "-c",
-                    "echo " + password + " | sudo -S echo working"};
-            try {
-                Process vPass = Runtime.getRuntime().exec(commands);
-                BufferedReader bufferedReader = new BufferedReader(new InputStreamReader(vPass.getInputStream()));
-                String currentLine;
-                while ((currentLine = bufferedReader.readLine()) != null) {
-                    if (currentLine.equals("working")) {
-                        working = true;
-                    }
+ //       String[] commands = {"/bin/bash", "-c",
+ //               "echo " + password + " | sudo -S echo working"};
+
+        String[] commands = {"cmd.exe", "/c",
+                "echo " + password + " | sudo -S echo working"};
+
+        try {
+            Process vPass = Runtime.getRuntime().exec(commands);
+            BufferedReader bufferedReader = new BufferedReader(new InputStreamReader(vPass.getInputStream()));
+            String currentLine;
+            while ((currentLine = bufferedReader.readLine()) != null) {
+                if (currentLine.equals("working")) {
+                    working = true;
                 }
-                bufferedReader.close();
-            } catch (IOException e) {
-                e.printStackTrace();
             }
+            bufferedReader.close();
+        } catch (IOException e) {
+            e.printStackTrace();
         }
         return working;
     }
