@@ -109,8 +109,8 @@ public class HostsGrabber implements Initializable {
         if (toAdd != null) {
             whitelistEntries.add(whitelistURLField.getText());
             whitelistURLField.setText("");
+            writeToList("Lists/Whitelist", whitelistEntries);
         }
-        writeToList("Lists/Whitelist", whitelistEntries);
     }
 
     public void removeFromWhitelist() {
@@ -118,8 +118,8 @@ public class HostsGrabber implements Initializable {
         if (toRemove != null) {
             whitelist.getSelectionModel().clearSelection();
             whitelistEntries.remove(toRemove);
+            writeToList("Lists/Whitelist", whitelistEntries);
         }
-        writeToList("Lists/Whitelist", whitelistEntries);
     }
 
     public void initializeBlacklist() {
@@ -140,8 +140,8 @@ public class HostsGrabber implements Initializable {
         if (toAdd != null) {
             blacklistEntries.add(blacklistURLField.getText());
             blacklistURLField.setText("");
+            writeToList("Lists/Blacklist", blacklistEntries);
         }
-        writeToList("Lists/Blacklist", blacklistEntries);
     }
 
     public void removeFromBlacklist() {
@@ -149,8 +149,8 @@ public class HostsGrabber implements Initializable {
         if (toRemove != null) {
             blacklist.getSelectionModel().clearSelection();
             blacklistEntries.remove(toRemove);
+            writeToList("Lists/Blacklist", blacklistEntries);
         }
-        writeToList("Lists/Blacklist", blacklistEntries);
     }
 
     private void writeToList(String file, ObservableList<String> list) {
@@ -166,13 +166,12 @@ public class HostsGrabber implements Initializable {
     private void loadOptions() {
         int numberOfOptions = 1;
         String[] currentOption;
-        try {
-            BufferedReader bufferedReader = new BufferedReader(new FileReader("Lists/Settings"));
+        try (BufferedReader bufferedReader = new BufferedReader(new FileReader("Lists/Settings"))) {
             String currentLine;
             for (int i = 0; i < numberOfOptions; i++) {
                 currentLine = bufferedReader.readLine();
                 if (currentLine == null) {
-                    processLog.appendText("\nError reading previous settings. Default settings applied.");
+                    processLog.appendText("Error reading previous settings. Default settings applied.\n");
                     defaultSettings();
                     return;
                 }
@@ -209,8 +208,7 @@ public class HostsGrabber implements Initializable {
     }
 
     private void defaultSettings() {
-        try {
-            BufferedWriter bufferedWriter = new BufferedWriter(new FileWriter("Settings"));
+        try (BufferedWriter bufferedWriter = new BufferedWriter(new FileWriter("Settings"))) {
             bufferedWriter.write("selectedPrefix=radio0");
             radio0.setSelected(true);
         } catch (IOException e) {
@@ -224,18 +222,23 @@ public class HostsGrabber implements Initializable {
             String[] commands = {"/bin/bash", "-c",
                     "echo " + password + " | sudo -S echo working && " +
                             "sudo -K"}; //sudo -K makes it so that another sudo command cannot be made without the password
+            Process vPass = null;
             try {
-                Process vPass = Runtime.getRuntime().exec(commands);
-                BufferedReader bufferedReader = new BufferedReader(new InputStreamReader(vPass.getInputStream()));
-                String currentLine;
-                while ((currentLine = bufferedReader.readLine()) != null) {
-                    if (currentLine.equals("working")) {
-                        working = true;
+                vPass = Runtime.getRuntime().exec(commands);
+                try (BufferedReader bufferedReader = new BufferedReader(new InputStreamReader(vPass.getInputStream()))) {
+                    String currentLine;
+                    while ((currentLine = bufferedReader.readLine()) != null) {
+                        if (currentLine.equals("working")) {
+                            working = true;
+                        }
                     }
                 }
-                bufferedReader.close();
             } catch (IOException e) {
                 e.printStackTrace();
+            } finally {
+                if (vPass != null) {
+                    vPass.destroy();
+                }
             }
         }
         return working;

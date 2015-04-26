@@ -199,7 +199,6 @@ public class HostsGrabberSwing implements ActionListener, PropertyChangeListener
                     BufferedReader bufferedReader = new BufferedReader(new InputStreamReader(httpSource.getInputStream()));
                     String currentLine;
                     while ((currentLine = bufferedReader.readLine()) != null) {
-//                        if (currentLine.contains("^$third-party")) {
                         if (currentLine.contains("^$third-party")) {
                             if (!currentLine.contains("*") && !currentLine.contains("/")) {
                                 list.add(prepend + currentLine.substring(currentLine.indexOf("||") + 2, currentLine.indexOf("^$")));
@@ -239,13 +238,11 @@ public class HostsGrabberSwing implements ActionListener, PropertyChangeListener
             Path currentPath = Paths.get("");
             String absolutePath = currentPath.toAbsolutePath().toString();
 
-            try {
-                BufferedWriter bufferedWriter = new BufferedWriter(new FileWriter("hosts"));
+            try (BufferedWriter bufferedWriter = new BufferedWriter(new FileWriter("hosts"))){
                 bufferedWriter.write(generateComments());
                 for (String aCompiledList : compiledList) {
                     bufferedWriter.write(aCompiledList + "\n");
                 }
-                bufferedWriter.close();
             } catch (IOException e) {
                 e.printStackTrace();
             }
