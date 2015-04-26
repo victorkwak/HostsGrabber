@@ -15,7 +15,7 @@
     </MenuBar>
     <TabPane layoutY="27.0" prefHeight="373.0" prefWidth="380.0" tabClosingPolicy="UNAVAILABLE"
              AnchorPane.bottomAnchor="0.0" AnchorPane.leftAnchor="0.0" AnchorPane.rightAnchor="0.0"
-             AnchorPane.topAnchor="27.0">
+             AnchorPane.topAnchor="27.0" onMouseClicked="#tabListener">
         <Tab text="Main">
             <VBox prefHeight="345.0" prefWidth="380.0" AnchorPane.bottomAnchor="0.0"
                   AnchorPane.leftAnchor="0.0" AnchorPane.rightAnchor="0.0" AnchorPane.topAnchor="0.0">
@@ -32,9 +32,9 @@
                 </AnchorPane>
                 <AnchorPane>
                     <Label layoutX="54.0" layoutY="14.0" text="Press &quot;Start&quot; to begin."/>
-                    <Button layoutX="202.0" layoutY="9.0"
+                    <Button fx:id="startButton" layoutX="202.0" layoutY="9.0"
                             mnemonicParsing="false" onAction="#getHosts" text="Start"/>
-                    <Button layoutX="260.0" layoutY="9.0"
+                    <Button fx:id="cancelButton" layoutX="260.0" layoutY="9.0"
                             mnemonicParsing="false" onAction="#cancelTask" text="Cancel"/>
                 </AnchorPane>
                 <AnchorPane prefHeight="370.0" prefWidth="380.0">
@@ -44,7 +44,7 @@
                 </AnchorPane>
             </VBox>
         </Tab>
-        <Tab text="Whitelist">
+        <Tab fx:id="whiteListTab" text="Whitelist">
             <AnchorPane prefHeight="200.0" prefWidth="200.0">
                 <VBox layoutY="-1.0" prefHeight="341.0" prefWidth="380.0" AnchorPane.bottomAnchor="0.0"
                       AnchorPane.leftAnchor="0.0" AnchorPane.rightAnchor="0.0"
@@ -58,7 +58,7 @@
                         <TextField fx:id="whitelistURLField" layoutX="71.0" layoutY="21.0"
                                    prefHeight="26.0" prefWidth="148.0"
                                    AnchorPane.leftAnchor="71.0" AnchorPane.rightAnchor="161.0"/>
-                        <Button layoutX="232.0" layoutY="21.0"
+                        <Button fx:id="whitelistAddButton" layoutX="232.0" layoutY="21.0"
                                 mnemonicParsing="false" onAction="#addToWhitelist" text="Add"
                                 AnchorPane.rightAnchor="105.0"/>
                         <Button layoutX="308.0" layoutY="21.0"
@@ -75,7 +75,7 @@
                 </VBox>
             </AnchorPane>
         </Tab>
-        <Tab text="Custom">
+        <Tab text="Blacklist">
             <AnchorPane prefHeight="200.0" prefWidth="200.0">
                 <VBox layoutY="-1.0" prefHeight="341.0" prefWidth="380.0" AnchorPane.bottomAnchor="0.0"
                       AnchorPane.leftAnchor="0.0" AnchorPane.rightAnchor="0.0"
@@ -86,18 +86,18 @@
                                 <Insets left="30.0" top="25.0"/>
                             </padding>
                         </Label>
-                        <TextField fx:id="customURLField" layoutX="71.0" layoutY="21.0"
+                        <TextField fx:id="blacklistURLField" layoutX="71.0" layoutY="21.0"
                                    prefHeight="26.0" prefWidth="148.0"
                                    AnchorPane.leftAnchor="71.0" AnchorPane.rightAnchor="161.0"/>
-                        <Button layoutX="232.0" layoutY="21.0"
-                                mnemonicParsing="false" text="Add"
+                        <Button fx:id="blacklistAddButton" layoutX="232.0" layoutY="21.0"
+                                mnemonicParsing="false" text="Add" onAction="#addToBlacklist"
                                 AnchorPane.rightAnchor="105.0"/>
                         <Button layoutX="308.0" layoutY="21.0"
-                                mnemonicParsing="false" text="Remove"
+                                mnemonicParsing="false" text="Remove" onAction="#removeFromBlacklist"
                                 AnchorPane.rightAnchor="30.0"/>
                     </AnchorPane>
                     <AnchorPane prefHeight="305.0" prefWidth="380.0">
-                        <ListView fx:id="customList" layoutX="90.0" layoutY="37.0"
+                        <ListView fx:id="blacklist" layoutX="90.0" layoutY="37.0"
                                   prefHeight="200.0" prefWidth="200.0"
                                   AnchorPane.bottomAnchor="30.0" AnchorPane.leftAnchor="30.0"
                                   AnchorPane.rightAnchor="30.0" AnchorPane.topAnchor="0.0"/>

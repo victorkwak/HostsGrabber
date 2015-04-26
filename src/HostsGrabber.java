@@ -1,3 +1,6 @@
+import javafx.collections.FXCollections;
+import javafx.collections.ObservableList;
+import javafx.event.Event;
 import javafx.fxml.Initializable;
 import javafx.scene.control.*;
 import javafx.scene.layout.AnchorPane;
@@ -15,19 +18,48 @@ public class HostsGrabber implements Initializable {
     public TextArea processLog;
     //Whitelist tab
     public TextField whitelistURLField;
-    public ListView whitelist;
-    //Custom tab
-    public ListView customList;
-    public TextField customURLField;
+    public ListView<String> whitelist;
+    public Button whitelistAddButton;
+    ObservableList<String> whitelistEntries;
+    //Blacklist tab
+    public ListView<String> blacklist;
+    public TextField blacklistURLField;
+    public Button blacklistAddButton;
+    ObservableList<String> blacklistEntries;
     //Hosts tab
     public TextArea hostsFile;
     //Options tab
     public RadioButton radio0;
     public RadioButton radio127;
     public RadioButton radio00;
-    //Misc
+    public Button startButton;
+    public Button cancelButton;
+    public Tab whiteListTab;
+    //OS Information
     private String os;
     private String version;
+
+    @Override
+    public void initialize(URL location, ResourceBundle resources) {
+        //Main tab
+        os = System.getProperty("os.name");
+        version = System.getProperty("os.version");
+        processLog.setEditable(false);
+        processLog.appendText("You are using " + os + " " + version + "\n");
+        //Whitelist tab
+        initializeWhitelist();
+        //Blacklist tab
+        initializeBlacklist();
+        //Options tab
+        ToggleGroup radioGroup = new ToggleGroup();
+        radio0.setToggleGroup(radioGroup);
+        radio127.setToggleGroup(radioGroup);
+        radio00.setToggleGroup(radioGroup);
+        loadOptions();
+        startButton.setDefaultButton(true);
+        cancelButton.setCancelButton(true);
+        cancelButton.setDisable(true);
+    }
 
     public void closeProgram() {
         Stage stage = (Stage) frame.getScene().getWindow();
@@ -40,26 +72,102 @@ public class HostsGrabber implements Initializable {
     }
 
     public void getHosts() {
-        System.out.println("Working");
+        if (verifyPassword(passwordField.getText())) {
+            startButton.setDisable(true);
+            passwordField.setEditable(false);
+            passwordField.setDisable(true);
+            cancelButton.setDisable(false);
+//            GetHosts getHosts = new GetHosts();
+//            getHosts.addPropertyChangeListener(this);
+//            getHosts.execute();
+        } else {
+            processLog.appendText("Incorrect password.\n");
+            System.out.println("Incorrect password");
+        }
     }
 
     public void cancelTask() {
         System.out.println("Working");
     }
 
+    public void initializeWhitelist() {
+        whitelistEntries = FXCollections.observableArrayList();
+        try (BufferedReader whitelistReader = new BufferedReader(new FileReader("Lists/Whitelist"))) {
+            String currentLine;
+            while ((currentLine = whitelistReader.readLine()) != null) {
+                whitelistEntries.add(currentLine);
+            }
+            whitelist.setItems(whitelistEntries);
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
+    }
+
+
     public void addToWhitelist() {
-        System.out.println("Working");
+        String toAdd = whitelistURLField.getText();
+        if (toAdd != null) {
+            whitelistEntries.add(whitelistURLField.getText());
+            whitelistURLField.setText("");
+        }
+        writeToList("Lists/Whitelist", whitelistEntries);
     }
 
     public void removeFromWhitelist() {
-        System.out.println("Working");
+        String toRemove = whitelist.getSelectionModel().getSelectedItem();
+        if (toRemove != null) {
+            whitelist.getSelectionModel().clearSelection();
+            whitelistEntries.remove(toRemove);
+        }
+        writeToList("Lists/Whitelist", whitelistEntries);
+    }
+
+    public void initializeBlacklist() {
+        blacklistEntries = FXCollections.observableArrayList();
+        try (BufferedReader whitelistReader = new BufferedReader(new FileReader("Lists/Blacklist"))) {
+            String currentLine;
+            while ((currentLine = whitelistReader.readLine()) != null) {
+                blacklistEntries.add(currentLine);
+            }
+            blacklist.setItems(blacklistEntries);
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
+    }
+
+    public void addToBlacklist() {
+        String toAdd = blacklistURLField.getText();
+        if (toAdd != null) {
+            blacklistEntries.add(blacklistURLField.getText());
+            blacklistURLField.setText("");
+        }
+        writeToList("Lists/Blacklist", blacklistEntries);
+    }
+
+    public void removeFromBlacklist() {
+        String toRemove = blacklist.getSelectionModel().getSelectedItem();
+        if (toRemove != null) {
+            blacklist.getSelectionModel().clearSelection();
+            blacklistEntries.remove(toRemove);
+        }
+        writeToList("Lists/Blacklist", blacklistEntries);
+    }
+
+    private void writeToList(String file, ObservableList<String> list) {
+        try (BufferedWriter listWriter = new BufferedWriter(new FileWriter(file))) {
+            for (String s : list) {
+                listWriter.write(s + "\n");
+            }
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
     }
 
     private void loadOptions() {
         int numberOfOptions = 1;
         String[] currentOption;
         try {
-            BufferedReader bufferedReader = new BufferedReader(new FileReader("Settings"));
+            BufferedReader bufferedReader = new BufferedReader(new FileReader("Lists/Settings"));
             String currentLine;
             for (int i = 0; i < numberOfOptions; i++) {
                 currentLine = bufferedReader.readLine();
@@ -110,17 +218,43 @@ public class HostsGrabber implements Initializable {
         }
     }
 
-    @Override
-    public void initialize(URL location, ResourceBundle resources) {
-        //Main tab
-        os = System.getProperty("os.name");
-        version = System.getProperty("os.version");
-        processLog.setText("You are using " + os + " " + version);
-        //Options tab
-        ToggleGroup radioGroup = new ToggleGroup();
-        radio0.setToggleGroup(radioGroup);
-        radio127.setToggleGroup(radioGroup);
-        radio00.setToggleGroup(radioGroup);
-        loadOptions();
+    private boolean verifyPassword(String password) {
+        boolean working = false;
+        if (os.contains("Mac") || os.contains("Linux")) {
+            String[] commands = {"/bin/bash", "-c",
+                    "echo " + password + " | sudo -S echo working && " +
+                            "sudo -K"}; //sudo -K makes it so that another sudo command cannot be made without the password
+            try {
+                Process vPass = Runtime.getRuntime().exec(commands);
+                BufferedReader bufferedReader = new BufferedReader(new InputStreamReader(vPass.getInputStream()));
+                String currentLine;
+                while ((currentLine = bufferedReader.readLine()) != null) {
+                    if (currentLine.equals("working")) {
+                        working = true;
+                    }
+                }
+                bufferedReader.close();
+            } catch (IOException e) {
+                e.printStackTrace();
+            }
+        }
+        return working;
+    }
+
+    public void tabListener(Event event) {
+        if (event.getTarget().toString().contains("Main")) {
+            System.out.println("Main");
+            startButton.setDefaultButton(true);
+        } else if (event.getTarget().toString().contains("Whitelist")) {
+            System.out.println("Whitelist");
+            whitelistAddButton.setDefaultButton(true);
+        } else if (event.getTarget().toString().contains("Blacklist")) {
+            System.out.println("Blacklist");
+            blacklistAddButton.setDefaultButton(true);
+        } else if (event.getTarget().toString().contains("Hosts")) {
+            System.out.println("Hosts");
+        } else if (event.getTarget().toString().contains("Options")) {
+            System.out.println("Options");
+        }
     }
 }

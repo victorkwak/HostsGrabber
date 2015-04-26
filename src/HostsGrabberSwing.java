@@ -34,9 +34,9 @@ public class HostsGrabberSwing implements ActionListener, PropertyChangeListener
 
     //Maintained hosts file lists
     private final String[] HOSTS_SOURCES = {
-            "https://adaway.org/hosts.txt",
+//            "https://adaway.org/hosts.txt", Hasn't been updated since 5/18/2014. Will not use anymore.
             "http://winhelp2002.mvps.org/hosts.txt",
-            "http://hosts-file.net/ad_servers.asp",
+//            "http://hosts-file.net/ad_servers.asp", Automation is forbidden.
             "http://pgl.yoyo.org/adservers/serverlist.php?hostformat=hosts&showintro=0&mimetype=plaintext",
             "http://someonewhocares.org/hosts/hosts",
             "http://www.malwaredomainlist.com/hostslist/hosts.txt"};
@@ -45,6 +45,9 @@ public class HostsGrabberSwing implements ActionListener, PropertyChangeListener
     private final String[] ADBLOCK_SOURCES = {
             "http://www.fanboy.co.nz/fanboy-korean.txt",
             "https://easylist-downloads.adblockplus.org/easylist_noelemhide.txt"};
+
+    private final String[] CUSTOM_LIST = {
+    };
 
     /**
      * Determines OS and builds GUI
@@ -98,8 +101,6 @@ public class HostsGrabberSwing implements ActionListener, PropertyChangeListener
         // Default Button
         JRootPane jRootPane = frame.getRootPane();
         jRootPane.setDefaultButton(start);
-
-
     }
 
     /**
@@ -110,11 +111,24 @@ public class HostsGrabberSwing implements ActionListener, PropertyChangeListener
 
         public Set<String> generateList() {
             Set<String> list = new LinkedHashSet<>();
-            int numberOfSources = HOSTS_SOURCES.length + ADBLOCK_SOURCES.length;
+            int numberOfSources = HOSTS_SOURCES.length + ADBLOCK_SOURCES.length + CUSTOM_LIST.length;
+            customList(list, CUSTOM_LIST);
             hostsList(list, HOSTS_SOURCES, numberOfSources);
             adBlockList(list, ADBLOCK_SOURCES, numberOfSources);
+
             setProgress(99);
             return list;
+        }
+
+        private void customList(Set<String> list, String[] CUSTOM_LIST) {
+            if (CUSTOM_LIST.length == 0) {
+                return;
+            }
+            System.out.println("Applying custom list...");
+            currentTask.append("Applying custom list...\n");
+            for (String s : CUSTOM_LIST) {
+                list.add(prepend + s);
+            }
         }
 
         /**
@@ -173,7 +187,6 @@ public class HostsGrabberSwing implements ActionListener, PropertyChangeListener
             currentTask.append("Getting AdBlock lists...\n");
             try {
                 for (String e : SOURCES) {
-                    boolean useSection = false;
                     System.out.print("    " + e + "...");
                     currentTask.append("    " + e + "...");
                     list.add("# " + e);
@@ -186,74 +199,11 @@ public class HostsGrabberSwing implements ActionListener, PropertyChangeListener
                     BufferedReader bufferedReader = new BufferedReader(new InputStreamReader(httpSource.getInputStream()));
                     String currentLine;
                     while ((currentLine = bufferedReader.readLine()) != null) {
-                        if (currentLine.startsWith("!")) {
-                            if (currentLine.contains("License") ||
-                                    currentLine.contains("Licence") ||
-                                    currentLine.contains("Title") ||
-                                    currentLine.contains("Updated")) {
-                                list.add("# " + currentLine.substring(2));
-                            } else if (currentLine.contains("General blocking rules") ||
-                                    currentLine.contains("3rd party blocking rules") ||
-                                    currentLine.contains("Third-party advertisers")) {
-                                list.add("# " + currentLine.substring(1));
-                                useSection = true;
-                            } else if (currentLine.contains("1st party") ||
-                                    currentLine.contains("Third-party advert") ||
-                                    currentLine.contains("Korean Trackers")) {
-                                useSection = false;
-                            }
-                        }
-                        if (useSection && currentLine.startsWith("||")) {
-                            if (currentLine.contains("^")) {
-                                String temp = currentLine.substring(2, currentLine.indexOf("^"));
-                                if (temp.contains("*")) {
-                                    temp = temp.substring(0, temp.indexOf("*"));
-                                    if (temp.contains("/")) {
-                                        temp = temp.substring(0, temp.indexOf("/"));
-                                    }
-                                } else if (temp.contains("/")) {
-                                    temp = temp.substring(0, temp.indexOf("/"));
-                                    if (temp.contains("*")) {
-                                        temp = temp.substring(0, temp.indexOf("*"));
-                                    }
-                                }
-                                if (temp.contains(".")) {
-                                    list.add(prepend + temp);
-                                }
-                            } else if (currentLine.contains("*")) {
-                                String temp = currentLine.substring(2, currentLine.indexOf("*"));
-                                if (temp.contains("^")) {
-                                    temp = temp.substring(0, temp.indexOf("^"));
-                                    if (temp.contains("/")) {
-                                        temp = temp.substring(0, temp.indexOf("/"));
-                                    }
-                                } else if (temp.contains("/")) {
-                                    temp = temp.substring(0, temp.indexOf("/"));
-                                    if (temp.contains("^")) {
-                                        temp = temp.substring(0, temp.indexOf("^"));
-                                    }
-                                }
-                                if (temp.contains(".")) {
-                                    list.add(prepend + temp);
-                                }
-                            } else if (currentLine.contains("/")) {
-                                String temp = currentLine.substring(2, currentLine.indexOf("/"));
-                                if (temp.contains("*")) {
-                                    temp = temp.substring(0, temp.indexOf("*"));
-                                    if (temp.contains("^")) {
-                                        temp = temp.substring(0, temp.indexOf("^"));
-                                    }
-                                } else if (temp.contains("^")) {
-                                    temp = temp.substring(0, temp.indexOf("^"));
-                                    if (temp.contains("*")) {
-                                        temp = temp.substring(0, temp.indexOf("*"));
-                                    }
-                                }
-                                if (temp.contains(".")) {
-                                    list.add(prepend + temp);
-                                }
-                            } else {
-                                list.add(prepend + currentLine.substring(2));
+//                        if (currentLine.contains("^$third-party")) {
+                        if (currentLine.contains("^$third-party")) {
+                            if (!currentLine.contains("*") && !currentLine.contains("/")) {
+                                list.add(prepend + currentLine.substring(currentLine.indexOf("||") + 2, currentLine.indexOf("^$")));
+                                System.out.println(prepend + currentLine.substring(currentLine.indexOf("||") + 2, currentLine.indexOf("^$")));
                             }
                         }
                     }
@@ -411,7 +361,8 @@ public class HostsGrabberSwing implements ActionListener, PropertyChangeListener
         boolean working = false;
         if (os.contains("Mac") || os.contains("Linux")) {
             String[] commands = {"/bin/bash", "-c",
-                    "echo " + password + " | sudo -S echo working"};
+                    "echo " + password + " | sudo -S echo working && " +
+                            "sudo -K"}; //sudo -K makes it so that another sudo command cannot be made without the password
             try {
                 Process vPass = Runtime.getRuntime().exec(commands);
                 BufferedReader bufferedReader = new BufferedReader(new InputStreamReader(vPass.getInputStream()));
